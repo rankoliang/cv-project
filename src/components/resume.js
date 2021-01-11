@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import { InfoDisplay, InfoForm } from './info';
+import InfoForm from './info-form';
+import InfoDisplay from './info';
 import styled from 'styled-components';
 
 const StyledResume = styled.div`
