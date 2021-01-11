@@ -1,12 +1,13 @@
-import Form from './form';
+import { Component } from 'react';
+import Form, { InputField } from './form';
 
-class InfoForm extends Form {
+class InfoForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = Object.assign({}, this.props.info);
 
-    this.formFields = [
+    this.inputFields = InputField.arrayOf.bind(this, [
       {
         id: 'first-name',
         label: 'First Name:',
@@ -31,7 +32,17 @@ class InfoForm extends Form {
         label: 'Phone:',
         fields: ['phone'],
       },
-    ];
+    ]);
+  }
+
+  render() {
+    const { info, ...props } = this.props;
+
+    return (
+      <Form subject={this.state} {...props}>
+        {this.inputFields()}
+      </Form>
+    );
   }
 }
 

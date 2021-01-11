@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import InfoForm from './info-form';
-import InfoDisplay from './info';
+import Info from './info';
+import Education from './education';
 import styled from 'styled-components';
 
 const StyledResume = styled.div`
@@ -21,6 +22,11 @@ class Resume extends Component {
         },
         email: '',
         phone: '',
+      },
+      education: {
+        schoolName: '',
+        title: '',
+        date: '',
       },
       isEditing: {
         info: true,
@@ -51,15 +57,17 @@ class Resume extends Component {
 
   render() {
     const { info, isEditing } = this.state;
-    const Info = isEditing.info ? InfoForm : InfoDisplay;
+    const InfoComponent = isEditing.info ? InfoForm : Info;
 
     return (
       <StyledResume>
-        <Info
+        <InfoComponent
+          title={'Info'}
           info={info}
           toggleEdit={this.toggleEdit('info')}
           submitForm={this.submitForm('info')}
         />
+        <Education />
       </StyledResume>
     );
   }

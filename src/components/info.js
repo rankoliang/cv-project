@@ -36,7 +36,7 @@ const StyledContact = styled.address`
   }
 `;
 
-class InfoDisplay extends Component {
+class Info extends Component {
   render() {
     const {
       info: { name, email, phone },
@@ -75,4 +75,4 @@ class Contact extends Component {
   }
 }
 
-export default InfoDisplay;
+export default Info;

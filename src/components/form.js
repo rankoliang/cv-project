@@ -17,7 +17,20 @@ const StyledForm = styled.form`
   }
 `;
 
-class FormField extends Component {
+class InputField extends Component {
+  static arrayOf(inputFields) {
+    return inputFields.map(({ fields, ...props }) => {
+      return (
+        <InputField
+          {...props}
+          onChange={Form.onFieldChange.apply(this, fields)}
+          value={dig(this.state, ...fields)}
+          key={props.id}
+        />
+      );
+    });
+  }
+
   render() {
     const { id, label, ...inputProps } = this.props;
 
@@ -34,12 +47,11 @@ class Form extends Component {
   constructor(props) {
     super(props);
 
-    this.onFieldChange = this.onFieldChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFormCancel = this.onFormCancel.bind(this);
   }
 
-  onFieldChange(...fields) {
+  static onFieldChange(...fields) {
     const stateField = fields[0];
     const nestedFields = fields.slice(1);
 
@@ -63,11 +75,10 @@ class Form extends Component {
   }
 
   onFormSubmit(e) {
-    const { toggleEdit, submitForm } = this.props;
-    const { name, email, phone } = this.state;
+    const { toggleEdit, submitForm, subject } = this.props;
 
     e.preventDefault();
-    submitForm({ name, email, phone });
+    submitForm(subject);
     toggleEdit();
   }
 
@@ -79,17 +90,8 @@ class Form extends Component {
   render() {
     return (
       <StyledForm onSubmit={this.onFormSubmit}>
-        <h2>Info</h2>
-        {this.formFields.map(({ fields, ...props }) => {
-          return (
-            <FormField
-              {...props}
-              onChange={this.onFieldChange(...fields)}
-              value={dig(this.state, ...fields)}
-              key={props.id}
-            />
-          );
-        })}
+        <h2>{this.props.title}</h2>
+        {this.props.children}
         <div>
           <button onClick={this.onFormCancel}>Cancel</button>
           <input type="submit" value="Submit" />
@@ -100,3 +102,4 @@ class Form extends Component {
 }
 
 export default Form;
+export { InputField };
