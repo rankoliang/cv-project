@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
+import nestedObj from '../helpers/nestedObj';
+import fullName from '../helpers/full-name';
 import styled from 'styled-components';
 
 const StyledInfo = styled.div`
@@ -43,9 +45,7 @@ class InfoDisplay extends Component {
 
     return (
       <StyledInfo>
-        <h1>
-          {name.first} {name.last}
-        </h1>
+        <h1>{fullName(name)}</h1>
         <Contact email={email} phone={phone} />
         <button onClick={this.props.toggleEdit}>Edit</button>
       </StyledInfo>
@@ -59,14 +59,18 @@ class Contact extends Component {
 
     return (
       <StyledContact>
-        <a href={`mailto:${email}`}>
-          <AiOutlineMail />
-          {email}
-        </a>
-        <a href={`tel:${phone}`}>
-          <AiOutlinePhone />
-          {phone}
-        </a>
+        {email && (
+          <a href={`mailto:${email}`}>
+            <AiOutlineMail />
+            {email}
+          </a>
+        )}
+        {phone && (
+          <a href={`tel:${phone}`}>
+            <AiOutlinePhone />
+            {phone}
+          </a>
+        )}
       </StyledContact>
     );
   }
@@ -88,12 +92,12 @@ const Form = styled.form`
 
 class FormField extends Component {
   render() {
-    const { id, label, type = 'text', value = '', ...inputProps } = this.props;
+    const { id, label, type = 'text', ...inputProps } = this.props;
 
     return (
       <div>
         <label htmlFor={id}>{label}</label>
-        <input type={type} id={id} defaultValue={value} {...inputProps} />
+        <input type={type} id={id} {...inputProps} />
       </div>
     );
   }
@@ -103,66 +107,68 @@ class InfoForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      name: {
-        first: '',
-        last: '',
-        get full() {
-          return `${this.first} ${this.last}`;
-        },
-      },
-      email: '',
-      phone: '',
-    };
+    this.state = Object.assign({}, this.props.info);
 
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
   onFieldChange(...fields) {
+    const stateField = fields[0];
+    const nestedFields = fields.slice(1);
+
     return (e) => {
       let value;
 
       if (fields.length > 1) {
         value = Object.assign(
           {},
-          this.state[fields[0]],
-          nestedObj(e.target.value, ...fields.slice(1))
+          this.state[stateField],
+          nestedObj(e.target.value, nestedFields)
         );
       } else {
-        value = this.state[fields[0]];
+        value = e.target.value;
       }
 
       this.setState({
-        [fields[0]]: value,
+        [stateField]: value,
       });
     };
   }
 
-  render() {
+  onFormSubmit(e) {
     const { toggleEdit, submitForm } = this.props;
     const { name, email, phone } = this.state;
-    const info = { name, email, phone };
+
+    e.preventDefault();
+    submitForm({ name, email, phone });
+    toggleEdit();
+  }
+
+  onFormCancel(e) {
+    e.preventDefault();
+    this.props.toggleEdit();
+  }
+
+  render() {
+    const { name, email, phone } = this.state;
 
     return (
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          submitForm({ info });
-          toggleEdit(e);
-        }}
-      >
+      <Form onSubmit={this.onFormSubmit}>
         <h2>Info</h2>
         <FormField
           id="first-name"
           label="First Name:"
           value={name.first}
           onChange={this.onFieldChange('name', 'first')}
+          required
         />
         <FormField
           id="last-name"
           label="Last Name:"
           value={name.last}
           onChange={this.onFieldChange('name', 'last')}
+          required
         />
         <FormField
           id="email"
@@ -179,19 +185,11 @@ class InfoForm extends Component {
           onChange={this.onFieldChange('phone')}
         />
         <div>
-          <button onClick={toggleEdit}>Cancel</button>
+          <button onClick={this.onFormCancel}>Cancel</button>
           <input type="submit" value="Submit" />
         </div>
       </Form>
     );
-  }
-}
-
-function nestedObj(value, ...fields) {
-  if (fields.length === 1) {
-    return { [fields[0]]: value };
-  } else {
-    return { [fields[0]]: nestedObj(value, fields.slice(1)) };
   }
 }
 

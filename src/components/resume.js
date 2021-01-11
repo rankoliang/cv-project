@@ -15,14 +15,11 @@ class Resume extends Component {
     this.state = {
       info: {
         name: {
-          first: 'John',
-          last: 'Smith',
-          get full() {
-            return `${this.first} ${this.last}`;
-          },
+          first: '',
+          last: '',
         },
-        email: 'john.smith@example.com',
-        phone: '123-456-7890',
+        email: '',
+        phone: '',
       },
       isEditing: {
         info: true,
@@ -34,8 +31,7 @@ class Resume extends Component {
   }
 
   toggleEdit(section) {
-    return (e) => {
-      e.preventDefault();
+    return () => {
       this.setState((state) => {
         return {
           isEditing: Object.assign({}, state.isEditing, {
@@ -46,8 +42,10 @@ class Resume extends Component {
     };
   }
 
-  submitForm(state) {
-    this.setState(state);
+  submitForm(field) {
+    return (state) => {
+      this.setState({ [field]: state });
+    };
   }
 
   render() {
@@ -59,7 +57,7 @@ class Resume extends Component {
         <Info
           info={info}
           toggleEdit={this.toggleEdit('info')}
-          submitForm={this.submitForm}
+          submitForm={this.submitForm('info')}
         />
       </StyledResume>
     );
