@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Info from './info';
+import { InfoDisplay, InfoForm } from './info';
 import styled from 'styled-components';
 
 const StyledResume = styled.div`
@@ -14,19 +14,53 @@ class Resume extends Component {
 
     this.state = {
       info: {
-        name: 'John Smith',
+        name: {
+          first: 'John',
+          last: 'Smith',
+          get full() {
+            return `${this.first} ${this.last}`;
+          },
+        },
         email: 'john.smith@example.com',
         phone: '123-456-7890',
       },
+      isEditing: {
+        info: true,
+      },
+    };
+
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+  }
+
+  toggleEdit(section) {
+    return (e) => {
+      e.preventDefault();
+      this.setState((state) => {
+        return {
+          isEditing: Object.assign({}, state.isEditing, {
+            [section]: !state.isEditing[section],
+          }),
+        };
+      });
     };
   }
 
+  submitForm(state) {
+    this.setState(state);
+  }
+
   render() {
-    const { info } = this.state;
+    const { info, isEditing } = this.state;
+    const Info = isEditing.info ? InfoForm : InfoDisplay;
 
     return (
       <StyledResume>
-        <Info info={info} />
+        <Info
+          info={info}
+          toggleEdit={this.toggleEdit('info')}
+          submitForm={this.submitForm}
+        />
       </StyledResume>
     );
   }

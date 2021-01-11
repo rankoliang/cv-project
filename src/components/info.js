@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
 import styled from 'styled-components';
 
-const StyledInfoDisplay = styled.div`
+const StyledInfo = styled.div`
   text-align: center;
 
   h1 {
@@ -36,36 +36,24 @@ const StyledContact = styled.address`
 `;
 
 class InfoDisplay extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = Object.assign(
-      {
-        name: 'John Smith',
-        email: 'john.smith@example.com',
-        phone: '123-456-7890',
-      },
-      this.props
-    );
-  }
-
   render() {
-    const { name, email, phone } = this.state;
+    const {
+      info: { name, email, phone },
+    } = this.props;
 
     return (
-      <StyledInfoDisplay>
-        <h1>{name}</h1>
+      <StyledInfo>
+        <h1>
+          {name.first} {name.last}
+        </h1>
         <Contact email={email} phone={phone} />
-      </StyledInfoDisplay>
+        <button onClick={this.props.toggleEdit}>Edit</button>
+      </StyledInfo>
     );
   }
 }
 
 class Contact extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { email, phone } = this.props;
 
@@ -84,4 +72,127 @@ class Contact extends Component {
   }
 }
 
-export default InfoDisplay;
+const Form = styled.form`
+  h2 {
+    margin: 0;
+  }
+
+  *:not(:last-child) {
+    margin-bottom: 0.5em;
+  }
+
+  input {
+    margin: 0 0.5em;
+  }
+`;
+
+class FormField extends Component {
+  render() {
+    const { id, label, type = 'text', value = '', ...inputProps } = this.props;
+
+    return (
+      <div>
+        <label htmlFor={id}>{label}</label>
+        <input type={type} id={id} defaultValue={value} {...inputProps} />
+      </div>
+    );
+  }
+}
+
+class InfoForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: {
+        first: '',
+        last: '',
+        get full() {
+          return `${this.first} ${this.last}`;
+        },
+      },
+      email: '',
+      phone: '',
+    };
+
+    this.onFieldChange = this.onFieldChange.bind(this);
+  }
+
+  onFieldChange(...fields) {
+    return (e) => {
+      let value;
+
+      if (fields.length > 1) {
+        value = Object.assign(
+          {},
+          this.state[fields[0]],
+          nestedObj(e.target.value, ...fields.slice(1))
+        );
+      } else {
+        value = this.state[fields[0]];
+      }
+
+      this.setState({
+        [fields[0]]: value,
+      });
+    };
+  }
+
+  render() {
+    const { toggleEdit, submitForm } = this.props;
+    const { name, email, phone } = this.state;
+    const info = { name, email, phone };
+
+    return (
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitForm({ info });
+          toggleEdit(e);
+        }}
+      >
+        <h2>Info</h2>
+        <FormField
+          id="first-name"
+          label="First Name:"
+          value={name.first}
+          onChange={this.onFieldChange('name', 'first')}
+        />
+        <FormField
+          id="last-name"
+          label="Last Name:"
+          value={name.last}
+          onChange={this.onFieldChange('name', 'last')}
+        />
+        <FormField
+          id="email"
+          type="email"
+          label="Email:"
+          value={email}
+          onChange={this.onFieldChange('email')}
+        />
+        <FormField
+          id="phone"
+          type="tel"
+          label="Phone:"
+          value={phone}
+          onChange={this.onFieldChange('phone')}
+        />
+        <div>
+          <button onClick={toggleEdit}>Cancel</button>
+          <input type="submit" value="Submit" />
+        </div>
+      </Form>
+    );
+  }
+}
+
+function nestedObj(value, ...fields) {
+  if (fields.length === 1) {
+    return { [fields[0]]: value };
+  } else {
+    return { [fields[0]]: nestedObj(value, fields.slice(1)) };
+  }
+}
+
+export { InfoDisplay, InfoForm };
