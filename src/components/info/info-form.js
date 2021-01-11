@@ -1,16 +1,17 @@
 import { Component } from 'react';
-import Form, { BindableInputField } from './form';
+import Form, { BindableInputField } from '../form';
 
 class InfoForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = Object.assign({}, this.props.info);
+    this.InputField = BindableInputField(this);
   }
 
   render() {
     const { info, ...props } = this.props;
-    const InputField = BindableInputField.bind(this);
+    const InputField = this.InputField;
 
     return (
       <Form subject={this.state} {...props}>

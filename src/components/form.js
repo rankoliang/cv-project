@@ -29,21 +29,6 @@ const Controls = styled.div`
 `;
 
 class InputField extends Component {
-  static bindable({ field, fields, ...props }) {
-    let value;
-    let onChange;
-
-    if (field) {
-      value = dig(this.state, field);
-      onChange = Form.onFieldChange.call(this, field);
-    } else {
-      value = dig(this.state, ...fields);
-      onChange = Form.onFieldChange.apply(this, fields);
-    }
-
-    return <InputField {...props} onChange={onChange} value={value} />;
-  }
-
   render() {
     const { id, label, ...inputProps } = this.props;
 
@@ -114,7 +99,17 @@ class Form extends Component {
   }
 }
 
-const BindableInputField = InputField.bindable;
+const BindableInputField = function (binding) {
+  return ({ field, fields = [field], ...props }) => {
+    return (
+      <InputField
+        onChange={Form.onFieldChange.apply(binding, fields)}
+        value={dig(binding.state, ...fields)}
+        {...props}
+      />
+    );
+  };
+};
 
 export default Form;
 export { InputField, BindableInputField };

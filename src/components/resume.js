@@ -1,8 +1,6 @@
 import { Component } from 'react';
-import InfoForm from './info-form';
-import Info from './info';
-import Education from './education';
-import { EducationForm } from './education';
+import Info, { InfoForm } from './info/info';
+import Education, { EducationForm } from './education/education';
 import styled from 'styled-components';
 
 const StyledResume = styled.div`
@@ -25,8 +23,11 @@ class Resume extends Component {
         phone: '',
       },
       education: {
-        schoolName: '',
-        title: '',
+        school: '',
+        degree: {
+          type: '',
+          field: '',
+        },
         date: '',
       },
       isEditing: {

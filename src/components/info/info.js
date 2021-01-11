@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import { AiOutlineMail, AiOutlinePhone } from 'react-icons/ai';
-import fullName from '../helpers/full-name';
+import fullName from '../../helpers/full-name';
 import styled from 'styled-components';
+import InfoForm from './info-form';
 
 const StyledInfo = styled.div`
   text-align: center;
@@ -30,7 +31,7 @@ const StyledContact = styled.address`
     }
   }
 
-  *:not(:last-child):after {
+  & > *:not(:last-child):after {
     content: '|';
     margin: 0 0.25em;
   }
@@ -76,3 +77,4 @@ class Contact extends Component {
 }
 
 export default Info;
+export { InfoForm };
