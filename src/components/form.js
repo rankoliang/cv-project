@@ -8,12 +8,23 @@ const StyledForm = styled.form`
     margin: 0;
   }
 
+  input {
+    margin: 0 0.5em;
+  }
+
+  &:not(:first-child) {
+    margin-top: 0.5em;
+  }
+
   *:not(:last-child) {
     margin-bottom: 0.5em;
   }
+`;
 
+const Controls = styled.div`
   input {
-    margin: 0 0.5em;
+    margin-left: 0;
+    margin-right: 0.5em;
   }
 `;
 
@@ -92,10 +103,10 @@ class Form extends Component {
       <StyledForm onSubmit={this.onFormSubmit}>
         <h2>{this.props.title}</h2>
         {this.props.children}
-        <div>
-          <button onClick={this.onFormCancel}>Cancel</button>
+        <Controls>
+          <input type="button" onClick={this.onFormCancel} value="Cancel" />
           <input type="submit" value="Submit" />
-        </div>
+        </Controls>
       </StyledForm>
     );
   }

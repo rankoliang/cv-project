@@ -2,6 +2,7 @@ import { Component } from 'react';
 import InfoForm from './info-form';
 import Info from './info';
 import Education from './education';
+import { EducationForm } from './education';
 import styled from 'styled-components';
 
 const StyledResume = styled.div`
@@ -30,6 +31,7 @@ class Resume extends Component {
       },
       isEditing: {
         info: true,
+        education: true,
       },
     };
 
@@ -56,8 +58,9 @@ class Resume extends Component {
   }
 
   render() {
-    const { info, isEditing } = this.state;
+    const { education, info, isEditing } = this.state;
     const InfoComponent = isEditing.info ? InfoForm : Info;
+    const EducationComponent = isEditing.education ? EducationForm : Education;
 
     return (
       <StyledResume>
@@ -67,7 +70,12 @@ class Resume extends Component {
           toggleEdit={this.toggleEdit('info')}
           submitForm={this.submitForm('info')}
         />
-        <Education />
+        <EducationComponent
+          title={'Education'}
+          education={education}
+          toggleEdit={this.toggleEdit('education')}
+          submitForm={this.submitForm('education')}
+        />
       </StyledResume>
     );
   }
