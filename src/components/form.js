@@ -2,6 +2,7 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import nestedObj from '../helpers/nested-obj';
 import dig from '../helpers/dig';
+import PhoneInput from 'react-phone-number-input/input';
 
 const StyledForm = styled.form`
   h2 {
@@ -29,14 +30,14 @@ const Controls = styled.div`
   }
 `;
 
-class InputField extends Component {
+class Field extends Component {
   render() {
-    const { id, label, ...inputProps } = this.props;
+    const { id, label, children } = this.props;
 
     return (
       <div>
         <label htmlFor={id}>{label}</label>
-        <input id={id} {...inputProps} />
+        {children}
       </div>
     );
   }
@@ -100,6 +101,30 @@ class Form extends Component {
   }
 }
 
+class InputField extends Component {
+  render() {
+    const { id, label, ...inputProps } = this.props;
+
+    return (
+      <Field id={id} label={label}>
+        <input id={id} {...inputProps} />
+      </Field>
+    );
+  }
+}
+
+class PhoneInputField extends Component {
+  render() {
+    const { id, label, ...inputProps } = this.props;
+
+    return (
+      <Field id={id} label={label}>
+        <PhoneInput id={id} {...inputProps} />
+      </Field>
+    );
+  }
+}
+
 const bindField = function (FieldComponent, binding) {
   return ({ field, fields = [field], ...props }) => {
     return (
@@ -113,4 +138,4 @@ const bindField = function (FieldComponent, binding) {
 };
 
 export default Form;
-export { InputField, bindField as bindableField, bindField };
+export { InputField, bindField as bindableField, bindField, PhoneInputField };

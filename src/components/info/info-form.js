@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Form, { bindField, InputField } from '../form';
+import Form, { bindField, InputField, PhoneInputField } from '../form';
 
 class InfoForm extends Component {
   constructor(props) {
@@ -7,6 +7,13 @@ class InfoForm extends Component {
 
     this.state = Object.assign({}, this.props.info);
     this.InputField = bindField(InputField, this);
+    this.onPhoneChange = this.onPhoneChange.bind(this);
+  }
+
+  onPhoneChange(phone) {
+    this.setState({
+      phone,
+    });
   }
 
   render() {
@@ -36,12 +43,13 @@ class InfoForm extends Component {
           field="email"
           placeholder="jsmith@example.com"
         />
-        <InputField
+        <PhoneInputField
           id="phone"
-          type="tel"
           label="Phone:"
-          field="phone"
-          placeholder="1-800-123-3456"
+          defaultCountry="US"
+          placeholder="Enter a phone number"
+          onChange={this.onPhoneChange}
+          value={this.state.phone}
         />
       </Form>
     );
