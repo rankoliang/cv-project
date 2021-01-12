@@ -2,6 +2,7 @@ import { Component } from 'react';
 import Info, { InfoForm } from './info/info';
 import Education, { EducationForm } from './education/education';
 import styled from 'styled-components';
+import { format } from 'date-fns';
 
 const StyledResume = styled.div`
   margin: 1em;
@@ -28,7 +29,7 @@ class Resume extends Component {
           type: '',
           field: '',
         },
-        date: '',
+        date: format(new Date(), 'yyyy-MM-dd'),
       },
       isEditing: {
         info: true,

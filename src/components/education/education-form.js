@@ -1,12 +1,12 @@
 import { Component } from 'react';
-import Form, { BindableInputField } from '../form';
+import Form, { bindField, InputField } from '../form';
 
 class EducationForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = Object.assign({}, this.props.education);
-    this.InputField = BindableInputField(this);
+    this.InputField = bindField(InputField, this);
   }
 
   render() {
@@ -31,10 +31,16 @@ class EducationForm extends Component {
         />
         <InputField
           id="degree-field"
-          label="Field of study"
+          label="Field of study:"
           fields={['degree', 'field']}
           placeholder="Computer Science"
           required={school !== ''}
+        />
+        <InputField
+          id="graduation-date"
+          type="date"
+          label="Graduation date:"
+          field="date"
         />
       </Form>
     );

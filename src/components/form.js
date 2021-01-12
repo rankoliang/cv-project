@@ -9,6 +9,7 @@ const StyledForm = styled.form`
   }
 
   input {
+    padding: 0.25em;
     margin: 0 0.5em;
   }
 
@@ -99,10 +100,10 @@ class Form extends Component {
   }
 }
 
-const BindableInputField = function (binding) {
+const bindField = function (FieldComponent, binding) {
   return ({ field, fields = [field], ...props }) => {
     return (
-      <InputField
+      <FieldComponent
         onChange={Form.onFieldChange.apply(binding, fields)}
         value={dig(binding.state, ...fields)}
         {...props}
@@ -112,4 +113,4 @@ const BindableInputField = function (binding) {
 };
 
 export default Form;
-export { InputField, BindableInputField };
+export { InputField, bindField as bindableField, bindField };

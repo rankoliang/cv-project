@@ -1,12 +1,12 @@
 import { Component } from 'react';
-import Form, { BindableInputField } from '../form';
+import Form, { bindField, InputField } from '../form';
 
 class InfoForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = Object.assign({}, this.props.info);
-    this.InputField = BindableInputField(this);
+    this.InputField = bindField(InputField, this);
   }
 
   render() {
@@ -19,16 +19,30 @@ class InfoForm extends Component {
           id="first-name"
           label="First Name"
           fields={['name', 'first']}
+          placeholder="John"
           required
         />
         <InputField
           id="last-name"
           label="Last Name:"
           fields={['name', 'last']}
+          placeholder="Smith"
           required
         />
-        <InputField id="email" type="email" label="Email:" field="email" />
-        <InputField id="phone" type="tel" label="Phone:" field="phone" />
+        <InputField
+          id="email"
+          type="email"
+          label="Email:"
+          field="email"
+          placeholder="jsmith@example.com"
+        />
+        <InputField
+          id="phone"
+          type="tel"
+          label="Phone:"
+          field="phone"
+          placeholder="1-800-123-3456"
+        />
       </Form>
     );
   }
