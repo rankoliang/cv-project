@@ -17,8 +17,8 @@ class Resume extends Component {
     this.state = {
       info: {
         name: {
-          first: '',
-          last: '',
+          first: 'Your',
+          last: 'Name',
         },
         email: '',
         phone: '',
@@ -31,10 +31,10 @@ class Resume extends Component {
         },
         date: format(new Date(), 'yyyy-MM-dd'),
       },
-      isEditing: {
-        info: true,
-        education: true,
-      },
+      isEditing: new Map([
+        ['info', true],
+        ['education', true],
+      ]),
     };
 
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -45,9 +45,10 @@ class Resume extends Component {
     return () => {
       this.setState((state) => {
         return {
-          isEditing: Object.assign({}, state.isEditing, {
-            [section]: !state.isEditing[section],
-          }),
+          isEditing: new Map([
+            ...state.isEditing,
+            [section, !state.isEditing.get(section)],
+          ]),
         };
       });
     };
@@ -61,8 +62,10 @@ class Resume extends Component {
 
   render() {
     const { education, info, isEditing } = this.state;
-    const InfoComponent = isEditing.info ? InfoForm : Info;
-    const EducationComponent = isEditing.education ? EducationForm : Education;
+    const InfoComponent = isEditing.get('info') ? InfoForm : Info;
+    const EducationComponent = isEditing.get('eduation')
+      ? EducationForm
+      : Education;
 
     return (
       <StyledResume>

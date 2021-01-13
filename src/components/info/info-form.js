@@ -24,7 +24,7 @@ class InfoForm extends Component {
       <Form subject={this.state} {...props}>
         <InputField
           id="first-name"
-          label="First Name"
+          label="First Name:"
           fields={['name', 'first']}
           placeholder="John"
           required

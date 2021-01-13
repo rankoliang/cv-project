@@ -28,14 +28,14 @@ class Education extends Component {
       education: { school, degree, date },
     } = this.props;
 
-    if (school) {
-      return (
-        <div>
-          <EducationHeader>
-            <h2>Education</h2>
-            <button onClick={this.props.toggleEdit}>Edit</button>
-          </EducationHeader>
-          <School>{school}</School>
+    return (
+      <div>
+        <EducationHeader>
+          <h2>Education</h2>
+          <button onClick={this.props.toggleEdit}>Edit</button>
+        </EducationHeader>
+        {school && <School>{school}</School>}
+        {school && (
           <div>
             {degree.type && degree.field && (
               <div>
@@ -44,17 +44,9 @@ class Education extends Component {
             )}
             <GraduationDate date={date} />
           </div>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <EducationHeader>
-            <button onClick={this.props.toggleEdit}>Edit</button>
-          </EducationHeader>
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
   }
 }
 
