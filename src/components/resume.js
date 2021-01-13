@@ -31,9 +31,12 @@ class Resume extends Component {
         },
         date: format(new Date(), 'yyyy-MM-dd'),
       },
+      experience: new Map(),
       isEditing: new Map([
-        ['info', true],
+        ['info', false],
         ['education', true],
+        ['experience', true],
+        ['experiences', new Map()],
       ]),
     };
 
@@ -42,13 +45,15 @@ class Resume extends Component {
   }
 
   toggleEdit(section) {
-    return () => {
+    return (id) => {
       this.setState((state) => {
+        const isEditing = state.isEditing.get(section);
+        const isEditingValue = id
+          ? new Map([...isEditing, [id, !isEditing.get(id)]])
+          : !isEditing;
+
         return {
-          isEditing: new Map([
-            ...state.isEditing,
-            [section, !state.isEditing.get(section)],
-          ]),
+          isEditing: new Map([...state.isEditing, [section, isEditingValue]]),
         };
       });
     };
@@ -63,7 +68,7 @@ class Resume extends Component {
   render() {
     const { education, info, isEditing } = this.state;
     const InfoComponent = isEditing.get('info') ? InfoForm : Info;
-    const EducationComponent = isEditing.get('eduation')
+    const EducationComponent = isEditing.get('education')
       ? EducationForm
       : Education;
 

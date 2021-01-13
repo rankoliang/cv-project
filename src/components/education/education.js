@@ -23,6 +23,16 @@ const School = styled.h3`
 `;
 
 class Education extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleEdit = this.handleEdit.bind(this);
+  }
+
+  handleEdit() {
+    this.props.toggleEdit();
+  }
+
   render() {
     const {
       education: { school, degree, date },
@@ -32,7 +42,7 @@ class Education extends Component {
       <div>
         <EducationHeader>
           <h2>Education</h2>
-          <button onClick={this.props.toggleEdit}>Edit</button>
+          <button onClick={this.handleEdit}>Edit</button>
         </EducationHeader>
         {school && <School>{school}</School>}
         {school && (

@@ -38,6 +38,16 @@ const StyledContact = styled.address`
 `;
 
 class Info extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleEdit = this.handleEdit.bind(this);
+  }
+
+  handleEdit() {
+    this.props.toggleEdit();
+  }
+
   render() {
     const {
       info: { name, email, phone },
@@ -47,7 +57,7 @@ class Info extends Component {
       <StyledInfo>
         <h1>{fullName(name)}</h1>
         <Contact email={email} phone={phone} />
-        <button onClick={this.props.toggleEdit}>Edit</button>
+        <button onClick={this.handleEdit}>Edit</button>
       </StyledInfo>
     );
   }
