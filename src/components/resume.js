@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import Info, { InfoForm } from './info/info';
 import Education, { EducationForm } from './education/education';
+import uniqid from 'uniqid';
+import Experiences from './experience/experiences';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 
@@ -31,7 +33,28 @@ class Resume extends Component {
         },
         date: format(new Date(), 'yyyy-MM-dd'),
       },
-      experience: new Map(),
+      experiences: new Map([
+        [
+          uniqid(),
+          {
+            company: 'Company 1',
+            title: 'Role 1',
+            tasks: ['Amet delectus?', 'Ipsum quibusdam.'],
+            startDate: format(new Date(2020, 0, 1), 'yyyy-MM-dd'),
+            endDate: format(new Date(2020, 0, 2), 'yyyy-MM-dd'),
+          },
+        ],
+        [
+          uniqid(),
+          {
+            company: 'Company 2',
+            title: 'Role 2',
+            tasks: ['Sit sequi?', 'Lorem et!'],
+            startDate: format(new Date(2020, 0, 1), 'yyyy-MM-dd'),
+            endDate: format(new Date(2020, 0, 2), 'yyyy-MM-dd'),
+          },
+        ],
+      ]),
       isEditing: new Map([
         ['info', false],
         ['education', true],
@@ -75,16 +98,20 @@ class Resume extends Component {
     return (
       <StyledResume>
         <InfoComponent
-          title={'Info'}
+          title="Info"
           info={info}
           toggleEdit={this.toggleEdit('info')}
           submitForm={this.submitForm('info')}
         />
         <EducationComponent
-          title={'Education'}
+          title="Education"
           education={education}
           toggleEdit={this.toggleEdit('education')}
           submitForm={this.submitForm('education')}
+        />
+        <Experiences
+          title="Experience"
+          experiences={[...this.state.experiences.entries()]}
         />
       </StyledResume>
     );
