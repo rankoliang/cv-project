@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import nestedObj from '../helpers/nested-obj';
 import dig from '../helpers/dig';
 import PhoneInput from 'react-phone-number-input/input';
+import capitalize from '../helpers/capitalize';
 
 const StyledForm = styled.form`
   h2 {
@@ -103,11 +104,17 @@ class Form extends Component {
 
 class InputField extends Component {
   render() {
-    const { id, label, ...inputProps } = this.props;
+    const {
+      id,
+      label = capitalize(id) + ':',
+      children,
+      ...inputProps
+    } = this.props;
 
     return (
       <Field id={id} label={label}>
         <input id={id} {...inputProps} />
+        {children}
       </Field>
     );
   }
@@ -138,4 +145,4 @@ const bindField = function (FieldComponent, binding) {
 };
 
 export default Form;
-export { InputField, bindField as bindableField, bindField, PhoneInputField };
+export { InputField, bindField, PhoneInputField, StyledForm, Controls };

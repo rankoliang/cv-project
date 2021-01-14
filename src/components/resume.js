@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import Info, { InfoForm } from './info/info';
 import Education, { EducationForm } from './education/education';
-import uniqid from 'uniqid';
 import Experiences from './experience/experiences';
 import styled from 'styled-components';
 import { format } from 'date-fns';
+import update from '../helpers/update';
+import objFilter from '../helpers/obj-filter';
 
 const StyledResume = styled.div`
   margin: 1em;
@@ -33,38 +34,19 @@ class Resume extends Component {
         },
         date: format(new Date(), 'yyyy-MM-dd'),
       },
-      experiences: new Map([
-        [
-          uniqid(),
-          {
-            company: 'Company 1',
-            title: 'Role 1',
-            tasks: ['Amet delectus?', 'Ipsum quibusdam.'],
-            startDate: format(new Date(2020, 0, 1), 'yyyy-MM-dd'),
-            endDate: format(new Date(2020, 0, 2), 'yyyy-MM-dd'),
-          },
-        ],
-        [
-          uniqid(),
-          {
-            company: 'Company 2',
-            title: 'Role 2',
-            tasks: ['Sit sequi?', 'Lorem et!'],
-            startDate: format(new Date(2020, 0, 1), 'yyyy-MM-dd'),
-            endDate: format(new Date(2020, 0, 2), 'yyyy-MM-dd'),
-          },
-        ],
-      ]),
+      experiences: {},
       isEditing: new Map([
         ['info', false],
-        ['education', true],
-        ['experience', true],
+        ['education', false],
+        ['experience', false],
         ['experiences', new Map()],
       ]),
     };
 
     this.toggleEdit = this.toggleEdit.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.submitExperience = this.submitExperience.bind(this);
+    this.deleteExperience = this.deleteExperience.bind(this);
   }
 
   toggleEdit(section) {
@@ -86,6 +68,20 @@ class Resume extends Component {
     return (state) => {
       this.setState({ [field]: state });
     };
+  }
+
+  submitExperience(id, experience) {
+    this.setState({
+      experiences: update(this.state.experiences, {
+        [id]: experience,
+      }),
+    });
+  }
+
+  deleteExperience(id) {
+    this.setState({
+      experiences: objFilter(this.state.experiences, ([expId]) => expId !== id),
+    });
   }
 
   render() {
@@ -111,7 +107,13 @@ class Resume extends Component {
         />
         <Experiences
           title="Experience"
-          experiences={[...this.state.experiences.entries()]}
+          experiences={this.state.experiences}
+          toggleFormShow={this.toggleEdit('experience')}
+          toggleEdit={this.toggleEdit('experiences')}
+          showForm={isEditing.get('experience')}
+          showEdit={isEditing.get('experiences')}
+          submitExperience={this.submitExperience}
+          deleteExperience={this.deleteExperience}
         />
       </StyledResume>
     );

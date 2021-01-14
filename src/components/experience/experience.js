@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import uniqid from 'uniqid';
 
 class Experience extends Component {
   render() {
@@ -9,16 +8,20 @@ class Experience extends Component {
 
     return (
       <div>
-        <h2>{company}</h2>
+        <div>
+          <h2>{company}</h2>
+        </div>
         <div>
           {startDate} - {endDate}
         </div>
         <p>{title}</p>
         <ul>
-          {tasks.map((task) => {
-            return <li key={uniqid()}>{task}</li>;
+          {Object.entries(tasks).map(([id, task]) => {
+            return <li key={id}>{task}</li>;
           })}
         </ul>
+        <button onClick={() => this.props.toggleEdit()}>Edit</button>
+        <button onClick={() => this.props.deleteExperience()}>Delete</button>
       </div>
     );
   }
